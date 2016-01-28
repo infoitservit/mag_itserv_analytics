@@ -84,7 +84,7 @@ HTML;
             );
             foreach ($order->getAllVisibleItems() as $item) {
                 $result[] = sprintf("ga('ec:addProduct', {
-'sku': '%s',
+'id': '%s',
 'name': '%s',
 'category': '%s',
 'price': '%s',
