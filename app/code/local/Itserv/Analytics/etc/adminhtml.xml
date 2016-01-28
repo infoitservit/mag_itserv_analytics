@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * 
+* @category    Itserv
+* @package     Itserv_Analytics
+* @copyright   Copyright (c) 2010-2016 Agenzia Web It Serv, Inc. (http://www.it-serv.it)
+* @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+* @author      Denis Seghetti <denisseghetti@gmail.com>
+ */
+-->
+<config>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <itserv_analytics_options translate="title" module="itserv_analytics">
+                                        <title>Itserv Enhanced Analytics</title>
+                                    </itserv_analytics_options>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

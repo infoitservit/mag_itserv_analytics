@@ -1,0 +1,8 @@
+<layout version="0.1.0">
+    <default>
+        <!-- Mage_GoogleAnalytics -->
+        <reference name="head" before="-">
+            <block type="itserv_analytics/universal" name="itserv_analytics" as="itserv_analytics" template="itserv/analytics/ga.phtml" />
+        </reference>
+    </default>    
+</layout>
