@@ -33,6 +33,9 @@ class Itserv_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
     const XML_PATH_ACCOUNT       = 'itserv_analytics_options/analytics/account';
     const XML_PATH_ANONYMIZATION = 'itserv_analytics_options/analytics/anonymization';
     const XML_PATH_BRAND = 'itserv_analytics_options/analytics/brand';
+    const XML_PATH_COSTO_ACQUISTO_TAX = 'itserv_analytics_options/costo_acquisto/tax';
+    const XML_PATH_COSTO_ACQUISTO_ATTRIBUTE = 'itserv_analytics_options/costo_acquisto/attribute';
+    const XML_PATH_COSTO_ACQUISTO_ID_METRICA = 'itserv_analytics_options/costo_acquisto/id_metrica';
 
     /**
      * @var google analytics universal tracking code
@@ -82,5 +85,38 @@ class Itserv_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
     public function getBrandAttributeCode($store = null)
     {
         return Mage::getStoreConfig(self::XML_PATH_BRAND, $store);
+    }
+    
+    /**
+     * Get GA account id
+     *
+     * @param string $store
+     * @return string
+     */
+    public function getCostoAcquistoAttributeCode($store = null)
+    {
+        return Mage::getStoreConfig(self::XML_PATH_COSTO_ACQUISTO_ATTRIBUTE, $store);
+    }
+    
+    /**
+     * Get GA account id
+     *
+     * @param string $store
+     * @return string
+     */
+    public function getCostoAcquistoMetricaAnalytics($store = null)
+    {
+        return Mage::getStoreConfig(self::XML_PATH_COSTO_ACQUISTO_ID_METRICA, $store);
+    }
+    
+    /**
+     * Get GA account id
+     *
+     * @param string $store
+     * @return string
+     */
+    public function getCostoAcquistoTaxStatus($store = null)
+    {
+        return Mage::getStoreConfig(self::XML_PATH_COSTO_ACQUISTO_TAX, $store);
     }
 }

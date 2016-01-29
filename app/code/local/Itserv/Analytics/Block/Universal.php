@@ -28,7 +28,7 @@ class Itserv_Analytics_Block_Universal extends Mage_Core_Block_Template {
         $this->category = Mage::registry('current_category');
     }
 
-    protected function getProduttoreProdotto(Mage_Catalog_Model_Product $product) {
+    private function getProduttoreProdotto(Mage_Catalog_Model_Product $product) {
         if ($product->getAttributeText(Mage::helper('itserv_analytics')->getBrandAttributeCode())) {
             return $product->getAttributeText(Mage::helper('itserv_analytics')->getBrandAttributeCode());
         } else {
@@ -36,33 +36,25 @@ class Itserv_Analytics_Block_Universal extends Mage_Core_Block_Template {
         }
     }
 
-    public function getScriptProductDetail() {
+    private function getScriptProductDetail() {
         $pagina = Mage::app()->getFrontController()->getAction()->getFullActionName();
         if ($this->product && $this->product->getId() && $pagina == 'catalog_product_view') {
             return <<<HTML
-    ga('require', 'ec');
-    ga('ec:addProduct', {
-    'id': '{$this->jsQuoteEscape($this->product->getSku())}',
-    'name': '{$this->jsQuoteEscape($this->product->getName())}',
-    'category': '{$this->jsQuoteEscape($this->product->getName())}',
-    'brand': '{$this->jsQuoteEscape($this->getProduttoreProdotto($this->product))}',
-    });
-    ga('ec:setAction', 'detail');
+ga('require', 'ec');
+ga('ec:addProduct', {
+'id': '{$this->jsQuoteEscape($this->product->getSku())}',
+'name': '{$this->jsQuoteEscape($this->product->getName())}',
+'category': '{$this->jsQuoteEscape(($this->category) ? $this->category->getName() : null)}',
+'brand': '{$this->jsQuoteEscape($this->getProduttoreProdotto($this->product))}',
+});
+ga('ec:setAction', 'detail');
 HTML;
         } else {
             return '';
         }
     }
 
-    public function getScriptTransazione() {
-        /* $pagina = Mage::app()->getFrontController()->getAction()->getFullActionName();
-          if($pagina != 'checkout_onepage_success') {
-          return '';
-          }
-          else {
-         * 
-         */
-
+    private function getScriptTransazione() {
         $orderIds = $this->getOrderIds();
         if (empty($orderIds) || !is_array($orderIds)) {
             return;
@@ -88,40 +80,37 @@ HTML;
 'name': '%s',
 'category': '%s',
 'price': '%s',
-'quantity': '%s'
-});", $this->jsQuoteEscape($item->getSku()), $this->jsQuoteEscape($item->getName()), null, // there is no "category" defined for the order item
+'quantity': '%s',
+", $this->jsQuoteEscape($item->getSku()), $this->jsQuoteEscape($item->getName()), null, // there is no "category" defined for the order item
                         $item->getBasePrice(), $item->getQtyOrdered()
                 );
+                if ($this->getCodiceMetrica()) {
+                    $result[] = sprintf("
+'{$this->getCodiceMetrica()}': '%s'", $this->getCostoAcquisto($item));
+                }
+                $result[] = sprintf("});");
             }
         }
 
         return implode("\n", $result);
     }
 
-    protected function getUniversalAnalyticsBaseScript() {
+    public function getUniversalAnalyticsBaseScript() {
         $script = <<<HTML
-        <script type="text/javascript">
-        //<![CDATA[
-            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+<script type="text/javascript">
+//<![CDATA[
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-        //prima parte con creazione dell'istanza analytics
-        ga('create', '{$this->jsQuoteEscape($this->accountId)}', 'auto');
-        
-        //se abilitato, anonimizzo il codice
-        {$this->_getAnonymizationCodeUniversal()}
-        
-        //se siamo nella pagina prodotto, inseriamo l'apposito tag
-        {$this->getScriptProductDetail()}
-        
-        {$this->getScriptTransazione()}
-        //concludo inviando la page view
-        ga('send', 'pageview');
-
-        //]]>
-        </script>
+ga('create', '{$this->jsQuoteEscape($this->accountId)}', 'auto');
+{$this->_getAnonymizationCodeUniversal()}
+{$this->getScriptProductDetail()}
+{$this->getScriptTransazione()}
+ga('send', 'pageview');
+//]]>
+</script>
 HTML;
         return $script;
     }
@@ -131,11 +120,34 @@ HTML;
      *
      * @return string
      */
-    protected function _getAnonymizationCodeUniversal() {
+    private function _getAnonymizationCodeUniversal() {
         if (!Mage::helper('itserv_analytics')->isIpAnonymizationEnabled()) {
             return '';
         }
         return "ga('set', 'anonymizeIp', true);";
+    }
+
+    private function getCostoAcquisto($cart_item) {
+        $costo = null;
+
+        if ($codice_attributo = Mage::helper('itserv_analytics')->getCostoAcquistoAttributeCode()) {
+            $product_id = Mage::getModel("catalog/product")->getIdBySku($cart_item->getSku());
+            $costo = Mage::getModel("catalog/product")->getResource()->getAttributeRawValue($product_id, $codice_attributo, Mage::app()->getStore());
+
+            if ($costo) {
+                if (Mage::helper('itserv_analytics')->getCostoAcquistoTaxStatus() == '1' && $cart_item->getTaxPercent() && $cart_item->getTaxPercent() > 0) {
+                    $costo = $costo * (1 + ($cart_item->getTaxPercent() / 100));
+                }
+            }
+        }
+
+        return $costo;
+    }
+
+    private function getCodiceMetrica() {
+        if ($codice_metrica = Mage::helper('itserv_analytics')->getCostoAcquistoMetricaAnalytics(Mage::app()->getStore())) {
+            return $codice_metrica;
+        }
     }
 
 }

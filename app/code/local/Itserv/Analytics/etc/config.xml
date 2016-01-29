@@ -21,6 +21,15 @@
                 <class>Itserv_Analytics_Model</class>
             </itserv_analytics>
         </models>
+        <sales>
+            <quote>
+                <item>
+                    <product_attributes>
+                        <costo_acquisto />
+                    </product_attributes>
+                </item>
+            </quote>
+        </sales>
     </global>
     <frontend>
         <events>
