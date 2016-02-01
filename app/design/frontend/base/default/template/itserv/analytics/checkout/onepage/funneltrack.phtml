@@ -1,0 +1,71 @@
+<?php if ($this->getTracciamentoIsActive()) { ?>
+    <?php var_dump($this->getActiveStep()); ?>
+    <script type="text/javascript">
+        //Inizializzazione plugin ec
+        ga('require', 'ec');
+        last_step = 0;
+    <?php if ($this->getActiveStep() === 'login') { ?>
+            last_step = 1;
+    <?php } ?>
+    <?php if ($this->getActiveStep() === 'billing') { ?>
+            last_step = 2;
+    <?php } ?>
+        ga('ec:setAction', 'checkout', {
+            'step': last_step
+        });
+        ga('send', 'pageview');
+
+    //<![CDATA[    
+        Checkout.prototype.gotoSection = Checkout.prototype.gotoSection.wrap(function (parentMethod, section, reloadProgressBlock) {
+
+    // Call parent method.
+            parentMethod(section, reloadProgressBlock);
+            var step_prog = null;
+            switch (section) {
+                case 'login':
+                    step_prog = 1;
+                    break;
+                case 'billing':
+                    step_prog = 2;
+                    break;
+                case 'shipping':
+                    step_prog = 3;
+                    break;
+                case 'shipping_method':
+                    //Se lo step 3 viene saltato, invialo...
+                    if (last_step === 2) {
+                        step_prog = 3;
+                        sendActionToAnalytics();
+                    }
+                    var step_prog = 4;
+                    break;
+                case 'payment':
+                    step_prog = 5;
+                    break;
+                case 'review':
+                    step_prog = 6;
+                    break;
+            }
+
+            sendActionToAnalytics();
+
+    //Invia la pageview solo se lo step attuale è successivo all'ultimo processato
+            function sendActionToAnalytics() {
+                try {
+                    if (step_prog > last_step) {
+                        // push current checkout section to google analytics if available.
+                        ga('ec:setAction', 'checkout', {
+                            'step': step_prog
+                        });
+                        ga('send', 'pageview');
+                        last_step = step_prog;
+                    }
+                }
+                catch (err) {
+
+                }
+            }
+        });
+    //]]>
+    </script>
+<?php } ?>
