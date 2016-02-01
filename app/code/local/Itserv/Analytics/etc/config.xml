@@ -40,6 +40,14 @@
                     </itserv_analytics_order_success>
                 </observers>
             </checkout_multishipping_controller_success_action>
+            <checkout_cart_add_product_complete>
+                <observers>
+                    <itserv_analytics_product_addtocart_complete>
+                        <class>itserv_analytics/observer</class>
+                        <method>setProductAddToCartComplete</method>
+                    </itserv_analytics_product_addtocart_complete>
+                </observers>
+            </checkout_cart_add_product_complete>
         </events>
         <layout>
             <updates>

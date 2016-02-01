@@ -54,6 +54,26 @@ HTML;
         }
     }
 
+    private function getScriptProdottoAggiuntoAlCarrello() {
+        $product = Mage::getModel('core/session')->getProductToShoppingCart();
+        if (empty($product) || !is_object($product)) {
+            return;
+        }
+        $result[] = "ga('require', 'ec')";
+        $result[] = sprintf("ga('ec:addProduct', {
+'id': '%s',
+'name': '%s',
+'price': '%s',
+'quantity': '%s'
+", $this->jsQuoteEscape(
+                        $product->getId()), $this->jsQuoteEscape($product->getName()), $product->getPrice(), $product->getQty()
+        );
+        $result[] = sprintf("});");
+        $result[] = sprintf("ga('ec:setAction', 'add');");
+        Mage::getModel('core/session')->unsProductToShoppingCart();
+        return implode("\n", $result);
+    }
+
     private function getScriptTransazione() {
         $orderIds = $this->getOrderIds();
         if (empty($orderIds) || !is_array($orderIds)) {
@@ -109,6 +129,7 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 ga('create', '{$this->jsQuoteEscape($this->accountId)}', 'auto');
 {$this->_getAnonymizationCodeUniversal()}
 {$this->getScriptProductDetail()}
+{$this->getScriptProdottoAggiuntoAlCarrello()}
 {$this->getScriptTransazione()}
 ga('send', 'pageview');
 //]]>
@@ -134,14 +155,14 @@ HTML;
 
         if ($codice_attributo = Mage::helper('itserv_analytics')->getCostoAcquistoAttributeCode()) {
             $product_id = Mage::getModel("catalog/product")->getIdBySku($cart_item->getSku());
-            
+
             //Costo di acquisto del singolo prodotto
             $costo = Mage::getModel("catalog/product")->getResource()->getAttributeRawValue($product_id, $codice_attributo, Mage::app()->getStore());
 
             if ($costo) {
                 //Il costo totale è il costo di acquisto moltiplicato per le quantità acquistate.
                 $costo_totale = $costo * $cart_item->getQtyOrdered();
-                
+
                 //Se richiesto dalla configurazione, calcolo il costo applicando le tasse
                 if (Mage::helper('itserv_analytics')->getCostoAcquistoTaxStatus() == '1' && $cart_item->getTaxPercent() && $cart_item->getTaxPercent() > 0) {
                     $costo_totale = $costo_totale * (1 + ($cart_item->getTaxPercent() / 100));

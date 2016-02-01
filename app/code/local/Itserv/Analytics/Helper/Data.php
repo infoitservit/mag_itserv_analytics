@@ -10,11 +10,11 @@
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/afl-3.0.php
  * 
-* @category    Itserv
-* @package     Itserv_Analytics
-* @copyright   Copyright (c) 2010-2016 Agenzia Web It Serv, Inc. (http://www.it-serv.it)
-* @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-* @author      Denis Seghetti <denisseghetti@gmail.com>
+ * @category    Itserv
+ * @package     Itserv_Analytics
+ * @copyright   Copyright (c) 2010-2016 Agenzia Web It Serv, Inc. (http://www.it-serv.it)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ * @author      Denis Seghetti <denisseghetti@gmail.com>
  */
 
 /**
@@ -23,15 +23,15 @@
  * @category   Mage
  * @package    Mage_GoogleAnalytics
  */
-class Itserv_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
-{
+class Itserv_Analytics_Helper_Data extends Mage_Core_Helper_Abstract {
+
     /**
      * Config paths for using throughout the code
      */
-    const XML_ORIGINAL_MAGENTO_ANALYTICS_PATH_ACTIVE        = 'google/analytics/active';
-    const XML_PATH_ACTIVE        = 'itserv_analytics_options/analytics/active';
-    const XML_PATH_FUNNELTRACK_ACTIVE        = 'itserv_analytics_options/analytics/funneltrack';
-    const XML_PATH_ACCOUNT       = 'itserv_analytics_options/analytics/account';
+    const XML_ORIGINAL_MAGENTO_ANALYTICS_PATH_ACTIVE = 'google/analytics/active';
+    const XML_PATH_ACTIVE = 'itserv_analytics_options/analytics/active';
+    const XML_PATH_FUNNELTRACK_ACTIVE = 'itserv_analytics_options/analytics/funneltrack';
+    const XML_PATH_ACCOUNT = 'itserv_analytics_options/analytics/account';
     const XML_PATH_ANONYMIZATION = 'itserv_analytics_options/analytics/anonymization';
     const XML_PATH_BRAND = 'itserv_analytics_options/analytics/brand';
     const XML_PATH_COSTO_ACQUISTO_TAX = 'itserv_analytics_options/costo_acquisto/tax';
@@ -49,8 +49,7 @@ class Itserv_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
      * @param mixed $store
      * @return bool
      */
-    public function isItservAnalyticsAvailable($store = null)
-    {
+    public function isItservAnalyticsAvailable($store = null) {
         $accountId = Mage::getStoreConfig(self::XML_PATH_ACCOUNT, $store);
         return $accountId && Mage::getStoreConfigFlag(self::XML_PATH_ACTIVE, $store);
     }
@@ -61,8 +60,7 @@ class Itserv_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
      * @param null $store
      * @return bool
      */
-    public function isIpAnonymizationEnabled($store = null)
-    {
+    public function isIpAnonymizationEnabled($store = null) {
         return Mage::getStoreConfigFlag(self::XML_PATH_ANONYMIZATION, $store);
     }
 
@@ -72,62 +70,57 @@ class Itserv_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
      * @param string $store
      * @return string
      */
-    public function getAccountId($store = null)
-    {
+    public function getAccountId($store = null) {
         return Mage::getStoreConfig(self::XML_PATH_ACCOUNT, $store);
     }
-    
+
     /**
      * Get GA account id
      *
      * @param string $store
      * @return string
      */
-    public function getBrandAttributeCode($store = null)
-    {
+    public function getBrandAttributeCode($store = null) {
         return Mage::getStoreConfig(self::XML_PATH_BRAND, $store);
     }
-    
+
     /**
      * Get GA account id
      *
      * @param string $store
      * @return string
      */
-    public function getCostoAcquistoAttributeCode($store = null)
-    {
+    public function getCostoAcquistoAttributeCode($store = null) {
         return Mage::getStoreConfig(self::XML_PATH_COSTO_ACQUISTO_ATTRIBUTE, $store);
     }
-    
+
     /**
      * Get GA account id
      *
      * @param string $store
      * @return string
      */
-    public function getCostoAcquistoMetricaAnalytics($store = null)
-    {
+    public function getCostoAcquistoMetricaAnalytics($store = null) {
         return Mage::getStoreConfig(self::XML_PATH_COSTO_ACQUISTO_ID_METRICA, $store);
     }
-    
+
     /**
      * Get GA account id
      *
      * @param string $store
      * @return string
      */
-    public function getCostoAcquistoTaxStatus($store = null)
-    {
+    public function getCostoAcquistoTaxStatus($store = null) {
         return Mage::getStoreConfig(self::XML_PATH_COSTO_ACQUISTO_TAX, $store);
     }
-    
-    public function isFunnelTrackActive($store = null)
-    {
+
+    public function isFunnelTrackActive($store = null) {
         $funnelTrack = Mage::getStoreConfig(self::XML_PATH_FUNNELTRACK_ACTIVE, $store);
-        if($funnelTrack === '1') {
+        if ($funnelTrack === '1') {
             return true;
         }
-        
+
         return false;
     }
+
 }

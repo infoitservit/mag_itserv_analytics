@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Magento
  *
@@ -24,23 +25,21 @@
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-
 /**
  * Google Analytics module observer
  *
  * @category   Mage
  * @package    Mage_GoogleAnalytics
  */
-class Itserv_Analytics_Model_Observer
-{
+class Itserv_Analytics_Model_Observer {
+
     /**
      * Create Google Analytics block for success page view
      *
      * @deprecated after 1.3.2.3 Use setGoogleAnalyticsOnOrderSuccessPageView() method instead
      * @param Varien_Event_Observer $observer
      */
-    public function order_success_page_view($observer)
-    {
+    public function order_success_page_view($observer) {
         $this->setGoogleAnalyticsOnOrderSuccessPageView($observer);
     }
 
@@ -49,8 +48,7 @@ class Itserv_Analytics_Model_Observer
      *
      * @param Varien_Event_Observer $observer
      */
-    public function setGoogleAnalyticsOnOrderSuccessPageView(Varien_Event_Observer $observer)
-    {
+    public function setGoogleAnalyticsOnOrderSuccessPageView(Varien_Event_Observer $observer) {
         $orderIds = $observer->getEvent()->getOrderIds();
         if (empty($orderIds) || !is_array($orderIds)) {
             return;
@@ -60,4 +58,22 @@ class Itserv_Analytics_Model_Observer
             $block->setOrderIds($orderIds);
         }
     }
+
+    public function setProductAddToCartComplete(Varien_Event_Observer $observer) {
+        $product = $observer->getEvent()->getProduct();
+
+        if (empty($product) || !is_object($product)) {
+            return;
+        }
+
+        Mage::getModel('core/session')->setProductToShoppingCart(new Varien_Object(
+                array(
+            'id' => $product->getSku(),
+            'name' => $product->getName(),
+            'price' => $product->getPrice(),
+            'qty' => $product->getQty(),
+                )
+        ));
+    }
+
 }

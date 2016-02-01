@@ -6,10 +6,10 @@
     "require": {
         "magento-hackathon/magento-composer-installer": "*"
     },
-    "authors":[
+    "authors": [
         {
-            "name":"Add your name here",
-            "email":"Add your email address here"
+            "name": "Add your name here",
+            "email": "Add your email address here"
         }
     ]
 }
