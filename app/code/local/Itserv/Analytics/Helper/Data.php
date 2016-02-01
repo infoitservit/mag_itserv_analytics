@@ -30,6 +30,7 @@ class Itserv_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
      */
     const XML_ORIGINAL_MAGENTO_ANALYTICS_PATH_ACTIVE        = 'google/analytics/active';
     const XML_PATH_ACTIVE        = 'itserv_analytics_options/analytics/active';
+    const XML_PATH_FUNNELTRACK_ACTIVE        = 'itserv_analytics_options/analytics/funneltrack';
     const XML_PATH_ACCOUNT       = 'itserv_analytics_options/analytics/account';
     const XML_PATH_ANONYMIZATION = 'itserv_analytics_options/analytics/anonymization';
     const XML_PATH_BRAND = 'itserv_analytics_options/analytics/brand';
@@ -118,5 +119,15 @@ class Itserv_Analytics_Helper_Data extends Mage_Core_Helper_Abstract
     public function getCostoAcquistoTaxStatus($store = null)
     {
         return Mage::getStoreConfig(self::XML_PATH_COSTO_ACQUISTO_TAX, $store);
+    }
+    
+    public function isFunnelTrackActive($store = null)
+    {
+        $funnelTrack = Mage::getStoreConfig(self::XML_PATH_FUNNELTRACK_ACTIVE, $store);
+        if($funnelTrack === '1') {
+            return true;
+        }
+        
+        return false;
     }
 }

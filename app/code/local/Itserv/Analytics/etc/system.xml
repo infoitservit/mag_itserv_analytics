@@ -76,6 +76,28 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </anonymization>
+                        <funneltrack translate="label">
+                            <label>Abilita Tracciamento Funnel Checkout Onepage</label>
+                            <comment>
+                            <![CDATA[ATTENZIONE: testato e funzionante solo con modulo checkout onepage originale del tema RWD.
+                            <br>Se abilitato è necessario stabilire con precisione i passaggi del checkout onepage base:<br>
+                                <ul>
+                                <li>1 - Login</li>
+                                <li>2 - Info Fatturazione</li>
+                                <li>3 - Info Spedizione</li>
+                                <li>4 - Metodo Spedizione</li>
+                                <li>5 - Metodo Pagamento</li>
+                                <li>6 - Revisione Ordine</li>
+                                </ul>
+                            ]]>
+                            </comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </funneltrack>
                         <brand translate="label">
                             <label>Attributo "Brand"</label>
                             <frontend_type>text</frontend_type>
@@ -93,7 +115,7 @@
                     <label>Traccia Costo di Acquisto</label>
                     <comment>
                 <![CDATA[Inserendo un attributo che riporta il costo di acquisto di un prodotto, è possibile trasmetterlo a google analytics durante una transazione]]>
-                            </comment>
+                    </comment>
                     <frontend_type>text</frontend_type>
                     <sort_order>20</sort_order>
                     <show_in_default>1</show_in_default>

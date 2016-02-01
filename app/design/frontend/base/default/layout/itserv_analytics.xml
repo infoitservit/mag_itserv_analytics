@@ -4,5 +4,10 @@
         <reference name="head" before="-">
             <block type="itserv_analytics/universal" name="itserv_analytics" as="itserv_analytics" template="itserv/analytics/ga.phtml" />
         </reference>
-    </default>    
+    </default>  
+    <checkout_onepage_index>
+        <reference name="content">
+            <block type="itserv_analytics/checkout_onepage_funneltrack" name="itserv.checkout.onepage.funneltrack" as="itserv.checkout.funneltrack" template="itserv/analytics/checkout/onepage/funneltrack.phtml" after="-"/>
+        </reference>
+    </checkout_onepage_index>  
 </layout>
