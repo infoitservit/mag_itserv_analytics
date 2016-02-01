@@ -84,9 +84,11 @@ HTML;
 ", $this->jsQuoteEscape($item->getSku()), $this->jsQuoteEscape($item->getName()), null, // there is no "category" defined for the order item
                         $item->getBasePrice(), $item->getQtyOrdered()
                 );
+
+                //Inserisci costo di acquisto se esiste
                 if ($this->getCodiceMetrica()) {
                     $result[] = sprintf("
-'{$this->getCodiceMetrica()}': '%s'", $this->getCostoAcquisto($item));
+                                '{$this->getCodiceMetrica()}': '%s'", $this->getCostoAcquisto($item));
                 }
                 $result[] = sprintf("});");
             }
@@ -128,20 +130,26 @@ HTML;
     }
 
     private function getCostoAcquisto($cart_item) {
-        $costo = null;
+        $costo_totale = null;
 
         if ($codice_attributo = Mage::helper('itserv_analytics')->getCostoAcquistoAttributeCode()) {
             $product_id = Mage::getModel("catalog/product")->getIdBySku($cart_item->getSku());
+            
+            //Costo di acquisto del singolo prodotto
             $costo = Mage::getModel("catalog/product")->getResource()->getAttributeRawValue($product_id, $codice_attributo, Mage::app()->getStore());
 
             if ($costo) {
+                //Il costo totale è il costo di acquisto moltiplicato per le quantità acquistate.
+                $costo_totale = $costo * $cart_item->getQtyOrdered();
+                
+                //Se richiesto dalla configurazione, calcolo il costo applicando le tasse
                 if (Mage::helper('itserv_analytics')->getCostoAcquistoTaxStatus() == '1' && $cart_item->getTaxPercent() && $cart_item->getTaxPercent() > 0) {
-                    $costo = $costo * (1 + ($cart_item->getTaxPercent() / 100));
+                    $costo_totale = $costo_totale * (1 + ($cart_item->getTaxPercent() / 100));
                 }
             }
         }
 
-        return $costo;
+        return $costo_totale;
     }
 
     private function getCodiceMetrica() {
