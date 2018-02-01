@@ -28,7 +28,7 @@ class Itserv_Analytics_Block_Universal extends Mage_Core_Block_Template {
         $this->category = Mage::registry('current_category');
     }
 
-    private function getProduttoreProdotto(Mage_Catalog_Model_Product $product) {
+    private function getProduttoreProdotto(Mage_Catalog_Model_Product $product) {        
         if ($product->getAttributeText(Mage::helper('itserv_analytics')->getBrandAttributeCode())) {
             return $product->getAttributeText(Mage::helper('itserv_analytics')->getBrandAttributeCode());
         } else {
@@ -117,7 +117,7 @@ HTML;
         return implode("\n", $result);
     }
 
-    public function getUniversalAnalyticsBaseScript() {
+    public function getUniversalAnalyticsBaseScript() {        
         $script = <<<HTML
 <script type="text/javascript">
 //<![CDATA[
@@ -131,10 +131,12 @@ ga('create', '{$this->jsQuoteEscape($this->accountId)}', 'auto');
 {$this->getScriptProductDetail()}
 {$this->getScriptProdottoAggiuntoAlCarrello()}
 {$this->getScriptTransazione()}
+{$this->getScriptUserId()}
 ga('send', 'pageview');
 //]]>
 </script>
 HTML;
+
         return $script;
     }
 
@@ -177,6 +179,14 @@ HTML;
         if ($codice_metrica = Mage::helper('itserv_analytics')->getCostoAcquistoMetricaAnalytics(Mage::app()->getStore())) {
             return $codice_metrica;
         }
+    }
+    
+    private function getScriptUserId() {
+        if(Mage::getSingleton('customer/session')->getCustomer()) {
+            return "ga('set', 'userId', '".Mage::getSingleton('customer/session')->getCustomer()->getId()."')";
+        }
+        
+        return '';
     }
 
 }
