@@ -67,8 +67,8 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </account>
-			<account_optimize translate="label">
-                            <label>Optimize Account Number</label>
+			<account_optimizer translate="label">
+                            <label>Optimizer Account Number</label>
 			    <comment>
                             	<![CDATA[Se diverso da vuoto, inserisce lo snippet per usufruire di google optimize]]>
                             </comment>
@@ -77,7 +77,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                        </account_optimize>
+                        </account_optimizer>
                         <anonymization translate="label">
                             <label>Abilita Anonimizzazione Ip</label>			    
                             <frontend_type>select</frontend_type>
