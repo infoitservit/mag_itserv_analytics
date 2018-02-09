@@ -37,6 +37,7 @@ class Itserv_Analytics_Helper_Data extends Mage_Core_Helper_Abstract {
     const XML_PATH_COSTO_ACQUISTO_TAX = 'itserv_analytics_options/costo_acquisto/tax';
     const XML_PATH_COSTO_ACQUISTO_ATTRIBUTE = 'itserv_analytics_options/costo_acquisto/attribute';
     const XML_PATH_COSTO_ACQUISTO_ID_METRICA = 'itserv_analytics_options/costo_acquisto/id_metrica';
+    const XML_PATH_OPTIMIZER_ACCOUNT_CODE = 'itserv_analytics_options/analytics/account_optimizer';
 
     /**
      * @var google analytics universal tracking code
@@ -118,6 +119,15 @@ class Itserv_Analytics_Helper_Data extends Mage_Core_Helper_Abstract {
         $funnelTrack = Mage::getStoreConfig(self::XML_PATH_FUNNELTRACK_ACTIVE, $store);
         if ($funnelTrack === '1') {
             return true;
+        }
+
+        return false;
+    }
+
+    public function getOptimizerAccountNumber($store = null) {
+        $optimizerCode = Mage::getStoreConfig(self::XML_PATH_OPTIMIZER_ACCOUNT_CODE, $store);
+        if (strlen($optimizerCode) > 0) {
+            return $optimizerCode;
         }
 
         return false;

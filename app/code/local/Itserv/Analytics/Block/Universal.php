@@ -132,6 +132,7 @@ ga('create', '{$this->jsQuoteEscape($this->accountId)}', 'auto');
 {$this->getScriptProdottoAggiuntoAlCarrello()}
 {$this->getScriptTransazione()}
 {$this->getScriptUserId()}
+{$this->getGoogleOptimizerSnippet()}
 ga('send', 'pageview');
 //]]>
 </script>
@@ -184,6 +185,14 @@ HTML;
     private function getScriptUserId() {
         if(Mage::getSingleton('customer/session')->getCustomer()) {
             return "ga('set', 'userId', '".Mage::getSingleton('customer/session')->getCustomer()->getId()."')";
+        }
+        
+        return '';
+    }
+
+    private function getGoogleOptimizerSnippet() {
+        if ($codice_account_optimizer = Mage::helper('itserv_analytics')->getOptimizerAccountNumber(Mage::app()->getStore())) {
+            return "ga('require', '".$codice_account_optimizer."')";
         }
         
         return '';
